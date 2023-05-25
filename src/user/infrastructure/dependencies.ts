@@ -8,7 +8,7 @@ const mySqlUserRepository = new MySQLUserRepository(); // Esta implemeta el user
 
 export const getUserListUseCase = new GetUserListUseCase(
   mySqlUserRepository
-); //TODO: Instancia del Caso de Uso - Se le pasa el user-repository que necesita
+); //Instancia del Caso de Uso - Se le pasa el user-repository que necesita
 
 export const createUserUseCase = new CreateUserUseCase(
   mySqlUserRepository

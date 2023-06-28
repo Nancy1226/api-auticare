@@ -1,10 +1,10 @@
 import mysql from 'mysql2/promise';
 
 const config = {
-  host: 'localhost',
-  user: 'root',
-  database: 'apiTS',
-  password: '',
+  host: '3.217.106.192',
+  user: 'fran',
+  database: 'bdbroker',
+  password: 'passf123',
 };
 
 export const query = async (sql: string, params: any[]) => {

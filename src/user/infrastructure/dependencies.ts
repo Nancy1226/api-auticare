@@ -1,5 +1,6 @@
 // CONTIENE LA INSTANCIA DE TODAS LAS DEPENDENCIAS QUE SE ESTARAN UTILIZANDO
 import CreateUserUseCase from "../application/create-user-usecase";
+import { GetUserByID } from "../application/get-userById-usecase";
 import GetUserListUseCase from "../application/get-userlist-usecase";
 import { MySQLUserRepository } from "./mysql-user-repository";
 import UserController from "./user-controller";
@@ -14,5 +15,9 @@ export const createUserUseCase = new CreateUserUseCase(
   mySqlUserRepository
 );
 
-export const userController = new UserController(getUserListUseCase, createUserUseCase); // Dependencia de controller que necesita que le llegue el welcomeEmailSender
+export const getUserById = new GetUserByID(
+  mySqlUserRepository
+);
+
+export const userController = new UserController(getUserListUseCase, createUserUseCase, getUserById); // Dependencia de controller que necesita que le llegue el welcomeEmailSender
 // ya para poder invocar este caso de uso desde la ruta

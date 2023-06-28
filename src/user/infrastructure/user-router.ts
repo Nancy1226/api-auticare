@@ -8,5 +8,6 @@ const userRouter = express.Router();
 userRouter.get("/getAll", userController.getAll.bind(userController)); // Cuando se ejecute este caso de uso queremos que se ejecute el metodo run(que envia email) del userController
 
 userRouter.post("/create", userController.create.bind(userController)); 
+userRouter.get("/:id", userController.getById.bind(userController))
 
 export { userRouter }; // Exporta para crear nueva ruta en el main.ts

@@ -7,6 +7,7 @@ export interface UserRepository {
 
   create(user: User): Promise<User>;
 
+  getUserById(userId: string): Promise<User | null>;
 }
 
 export default UserRepository;

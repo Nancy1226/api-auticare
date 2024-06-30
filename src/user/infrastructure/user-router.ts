@@ -9,5 +9,7 @@ userRouter.get("/getAll", userController.getAll.bind(userController)); // Cuando
 
 userRouter.post("/create", userController.create.bind(userController)); 
 userRouter.get("/:id", userController.getById.bind(userController))
+userRouter.put('/:id', userController.update.bind(userController));
+userRouter.delete('/:id', userController.delete.bind(userController));
 
 export { userRouter }; // Exporta para crear nueva ruta en el main.ts

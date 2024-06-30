@@ -1,12 +1,12 @@
-import {UserRepository} from '../domain/user-repository';
+import { UserRepository } from '../domain/user-repository';
 import { User } from '../domain/user';
 
 class CreateUserUseCase {
   constructor(private userRepository: UserRepository) {}
 
-  async execute(userPayload: User): Promise<User> {
+  async execute(userPayload: Omit<User, 'id'>): Promise<User> {
     const user = new User(
-      null,
+      null, // En MongoDB, el ID se genera automáticamente
       userPayload.name,
       userPayload.email,
       userPayload.password

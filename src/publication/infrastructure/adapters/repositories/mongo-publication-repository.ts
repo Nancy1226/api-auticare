@@ -1,7 +1,7 @@
 // infrastructure/mongo-publication-repository.ts
-import { PublicationRepository } from '../domain/publication-repository';
-import { Publication } from '../domain/publication';
-import { PublicationModel } from './publication-schema';
+import { PublicationRepository } from '../../../domain/ports/publication-repository';
+import { Publication } from '../../../domain/publication';
+import { PublicationModel } from '../../publication-schema';
 
 export class MongoPublicationRepository implements PublicationRepository {
   async getAll(): Promise<Publication[]> {

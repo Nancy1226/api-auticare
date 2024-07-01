@@ -1,7 +1,7 @@
 // infrastructure/mysql-publication-repository.ts
-import { query } from './mysql';
-import { Publication } from "../domain/publication";
-import { PublicationRepository } from "../domain/publication-repository";
+import { query } from '../../databases/mysql';
+import { Publication } from "../../../domain/publication";
+import { PublicationRepository } from "../../../domain/ports/publication-repository";
 
 export class MySQLPublicationRepository implements PublicationRepository {
   

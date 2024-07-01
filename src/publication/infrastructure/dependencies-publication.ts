@@ -3,9 +3,9 @@ import DeletePublicationUseCase from "../application/delete-publication-usecase"
 import { GetPublicationByID } from "../application/get-publicationById-usecase";
 import GetPublicationListUseCase from "../application/get-publicationlist-usecase";
 import UpdatePublicationUseCase from "../application/update-publication-usecase";
-import PublicationController from "./publication-controller";
+import PublicationController from "./controllers/publication-controller";
 
-import { RepositoryFactory } from "./repository-factory";
+import { RepositoryFactory } from "./adapters/repositories/repository-factory";
 
 const publicationRepository = RepositoryFactory.createPublicationRepository();
 

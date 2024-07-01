@@ -1,5 +1,5 @@
 import { Publication } from '../domain/publication';
-import {PublicationRepository} from '../domain/publication-repository';
+import {PublicationRepository} from '../domain/ports/publication-repository';
 
 class GetPublicationListUseCase {
   constructor(private publicationRepository: PublicationRepository) {}

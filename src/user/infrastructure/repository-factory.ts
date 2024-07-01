@@ -1,6 +1,6 @@
 import { UserRepository } from "../domain/user-repository";
-import { MongoUserRepository } from "./mongo-user-repository";
-import { MySQLUserRepository } from "./mysql-user-repository";
+import { MongoUserRepository } from "./databases/mongo/mongo-user-repository";
+import { MySQLUserRepository } from "./databases/mysql/mysql-user-repository";
 import dotenv from 'dotenv';
 
 dotenv.config();

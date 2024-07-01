@@ -1,4 +1,4 @@
-import { PublicationRepository } from '../domain/publication-repository';
+import { PublicationRepository } from '../domain/ports/publication-repository';
 import { Publication } from '../domain/publication';
 
 class CreatePublicationUseCase {

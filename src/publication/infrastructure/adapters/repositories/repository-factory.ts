@@ -1,5 +1,5 @@
 // infrastructure/repository-factory.ts
-import { PublicationRepository } from "../domain/publication-repository";
+import { PublicationRepository } from "../../../domain/ports/publication-repository";
 import { MongoPublicationRepository } from "./mongo-publication-repository";
 import { MySQLPublicationRepository } from "./mysql-publication-repository";
 import dotenv from 'dotenv';

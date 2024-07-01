@@ -4,7 +4,7 @@ import DeleteUserUseCase from "../application/delete-user-usecase";
 import { GetUserByID } from "../application/get-userById-usecase";
 import GetUserListUseCase from "../application/get-userlist-usecase";
 import UpdateUserUseCase from "../application/update-user-usecase";
-import UserController from "./user-controller";
+import UserController from "./controllers/user-controller";
 import { RepositoryFactory } from "./repository-factory";
 
 const userFactoryRepository = RepositoryFactory.createUserRepository(); // Esta implemeta el userRepository que necesita el caso de uso

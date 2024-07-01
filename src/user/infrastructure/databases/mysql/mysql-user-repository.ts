@@ -1,6 +1,6 @@
 import { query } from './mysql';
-import { User } from "../domain/user";
-import { UserRepository } from "../domain/user-repository";
+import { User } from "../../../domain/user";
+import { UserRepository } from "../../../domain/user-repository";
 
 export class MySQLUserRepository implements UserRepository {
 

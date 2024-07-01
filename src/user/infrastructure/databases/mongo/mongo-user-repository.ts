@@ -1,8 +1,8 @@
 // mongo-user-repository.ts
-import { User } from "../domain/user";
-import { UserRepository } from "../domain/user-repository";
+import { User } from "../../../domain/user";
+import { UserRepository } from '../../../domain/user-repository';
 import { mongoose } from "./mongoDB";
-import { UserModel } from './user-schema';
+import { UserModel } from "../../schemas/user-schema";
 
 export class MongoUserRepository implements UserRepository {
 

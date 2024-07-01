@@ -1,5 +1,5 @@
 // domain/publication-repository.ts
-import { Publication } from './publication';
+import { Publication } from '../publication';
 
 export interface PublicationRepository {
   getAll(): Promise<Publication[]>;

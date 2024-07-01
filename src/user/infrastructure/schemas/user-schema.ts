@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { User } from '../domain/user';
+import { User } from '../../domain/user';
 
 export interface UserDocument extends User, Document {
   id: number | null;

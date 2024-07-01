@@ -1,13 +1,16 @@
 // publication-controller.ts
 import { Request, Response, NextFunction } from 'express';
-import CreatePublicationUseCase from '../application/create-publication-usecase';
-import GetPublicationListUseCase from '../application/get-publicationlist-usecase';
-import { GetPublicationByID } from '../application/get-publicationById-usecase';
-import UpdatePublicationUseCase from '../application/update-publication-usecase';
-import DeletePublicationUseCase from '../application/delete-publication-usecase';
-import { s3 } from './aws-config';
-import fs from 'fs';
-// import path from 'path';
+import CreatePublicationUseCase from '../../application/create-publication-usecase';
+import GetPublicationListUseCase from '../../application/get-publicationlist-usecase';
+import { GetPublicationByID } from '../../application/get-publicationById-usecase';
+import UpdatePublicationUseCase from '../../application/update-publication-usecase';
+import DeletePublicationUseCase from '../../application/delete-publication-usecase';
+import { LocalFileStorage } from '../adapters/storages/local-file-storage';
+import { S3FileStorage } from '../adapters/storages/s3-file-storage';
+
+const localFileStorage = new LocalFileStorage();
+const s3FileStorage = new S3FileStorage();
+
 
 class PublicationController {
   constructor(
@@ -22,38 +25,26 @@ class PublicationController {
     try {
       const publicationPayload = req.body;
       const file = req.file;
-  
+
       if (!file) {
         return res.status(400).send('No file uploaded');
       }
-  
-      // La ruta del archivo ya está definida por Multer
-      const localPath = file.path;
-  
+
+      // Guardar archivo localmente
+      const localFilePath = await localFileStorage.uploadFile(file);
+
       // Subir imagen a S3
-      const fileKey = `images/${Date.now()}-${file.originalname}`;
-      const params = {
-        Bucket: 'mymantenimientobucket',
-        Key: fileKey,
-        Body: fs.createReadStream(localPath),
-        ContentType: file.mimetype
-      };
-  
-      const uploadResult = await s3.upload(params).promise();
-      console.log('S3 Upload Result:', uploadResult);
-  
-      const publicationData = { ...publicationPayload, image: localPath, image_s3: uploadResult.Location };
+      const s3FilePath = await s3FileStorage.uploadFile(file);
+
+      const publicationData = { ...publicationPayload, image: localFilePath, image_s3: s3FilePath };
       const publication = await this.createPublicationUseCase.execute(publicationData);
-  
+
       res.status(201).json(publication);
     } catch (error) {
       next(error);
     } finally {
       if (req.file) {
         console.log("Publicacion creada con exito")
-        // fs.unlink(req.file.path, (err) => {
-        //   if (err) console.error('Error deleting local file:', err);
-        // });
       }
     }
   }
@@ -90,32 +81,17 @@ class PublicationController {
 
       // Eliminar imagen antigua si existe una nueva
       if (file) {
-        // Eliminar imagen de S3
-        const oldS3Key = existingPublication.image_s3.split('/').pop();
-        if (oldS3Key) {
-          await s3.deleteObject({ Bucket: 'mymantenimientobucket', Key: `images/${oldS3Key}` }).promise();
-        }
+        await localFileStorage.deleteFile(existingPublication.image);
+        await s3FileStorage.deleteFile(existingPublication.image_s3);
 
-        // Eliminar imagen del almacenamiento local
-        if (existingPublication.image) {
-          fs.unlinkSync(existingPublication.image);
-        }
+        // Guardar archivo localmente
+        const localFilePath = await localFileStorage.uploadFile(file);
 
-        // Subir nueva imagen a S3
-        const localPath = file.path;
-        const fileKey = `images/${Date.now()}-${file.originalname}`;
-        const params = {
-          Bucket: 'mymantenimientobucket',
-          Key: fileKey,
-          Body: fs.createReadStream(localPath),
-          ContentType: file.mimetype
-        };
-  
-        const uploadResult = await s3.upload(params).promise();
-        console.log('S3 Upload Result:', uploadResult);
+        // Subir imagen a S3
+        const s3FilePath = await s3FileStorage.uploadFile(file);
 
-        publicationPayload.image = localPath;
-        publicationPayload.image_s3 = uploadResult.Location;
+        publicationPayload.image = localFilePath;
+        publicationPayload.image_s3 = s3FilePath;
       }
 
       const updatedPublication = await this.updatePublicationUseCase.execute(publicationId, publicationPayload);
@@ -140,15 +116,10 @@ class PublicationController {
       }
 
       // Eliminar imagen de S3
-      const oldS3Key = existingPublication.image_s3.split('/').pop();
-      if (oldS3Key) {
-        await s3.deleteObject({ Bucket: 'mymantenimientobucket', Key: `images/${oldS3Key}` }).promise();
-      }
+      await s3FileStorage.deleteFile(existingPublication.image_s3);
 
       // Eliminar imagen del almacenamiento local
-      if (existingPublication.image) {
-        fs.unlinkSync(existingPublication.image);
-      }
+      await localFileStorage.deleteFile(existingPublication.image);
 
       const result = await this.deletePublicationUseCase.execute(publicationId);
       res.status(result ? 200 : 404).json({ success: result });

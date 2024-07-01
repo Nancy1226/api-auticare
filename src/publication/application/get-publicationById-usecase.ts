@@ -1,4 +1,4 @@
-import { PublicationRepository } from "../domain/publication-repository";
+import { PublicationRepository } from "../domain/ports/publication-repository";
 
 export class GetPublicationByID {
   constructor(private readonly publicationRepository: PublicationRepository) {}

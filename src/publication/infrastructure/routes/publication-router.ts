@@ -1,7 +1,7 @@
 // infrastructure/publication-router.ts
 import express from "express";
-import { publicationController } from "./dependencies-publication";
-import { upload } from "./multer-config";
+import { publicationController } from "../dependencies-publication";
+import { upload } from "../adapters/storages/local-file-storage";
 
 const publicationRouter = express.Router();
 

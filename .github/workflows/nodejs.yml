@@ -12,9 +12,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          token: ${{ secrets.PAT_TOKEN }}
       
       - name: Fusionar a Dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
@@ -25,14 +26,14 @@ jobs:
             echo "La rama ya está fusionada en Dev"
           else
             if git merge ${{ github.ref }} --no-ff --allow-unrelated-histories -m "Fusionar ${{ github.ref }} en Dev"; then
-              git push https://${{ secrets.PAT_TOKEN }}@github.com/Nancy1226/api-auticare.git HEAD:Dev
+              git push origin Dev
             else
               git merge --abort
               git checkout ${{ github.ref }}
               git checkout -b rama-fusion-temporal
               git checkout Dev
               git merge rama-fusion-temporal -X theirs --no-ff --allow-unrelated-histories -m "Fusionar ${{ github.ref }} en Dev (conflictos resueltos)"
-              git push https://${{ secrets.PAT_TOKEN }}@github.com/Nancy1226/api-auticare.git HEAD:Dev
+              git push origin Dev
             fi
           fi
 
@@ -41,8 +42,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.PAT_TOKEN }}
       - name: Ejecutar pruebas
         run: |
           echo "Ejecutando pruebas..."
@@ -56,13 +55,14 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          token: ${{ secrets.PAT_TOKEN }}
       
       - name: Fusionar a QA
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git fetch origin QA
           git checkout QA
           git merge origin/Dev --no-ff --allow-unrelated-histories -m "Fusionar Dev en QA"
-          git push https://${{ secrets.PAT_TOKEN }}@github.com/Nancy1226/api-auticare.git HEAD:QA
+          git push origin QA

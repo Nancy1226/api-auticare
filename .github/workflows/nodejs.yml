@@ -3,7 +3,7 @@ name: Gestión de Ramas
 on:
   push:
     branches:
-      - 'feature-001/api'
+      - 'feature-002/add-integration-whatsapp'
 
 jobs:
   fusionar-a-dev:

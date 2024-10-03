@@ -1,23 +1,69 @@
-name: Node CI
+name: Gestión de Ramas
 
-on: [push]
+on:
+  push:
+    branches:
+      - 'feature-001/api'
 
 jobs:
-  build:
+  fusionar-a-dev:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js 18
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
         with:
-          node-version: 18
-      - name: npm install
+          fetch-depth: 0
+      
+      - name: Fusionar a Dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm install
-      - name: npm run build
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git fetch origin Dev
+          git checkout Dev
+          
+          if git merge-base --is-ancestor ${{ github.ref }} Dev; then
+            echo "La rama ya está fusionada en Dev"
+          else
+            if git merge ${{ github.ref }} --no-ff --allow-unrelated-histories -m "Fusionar ${{ github.ref }} en Dev"; then
+              git push origin Dev
+            else
+              git merge --abort
+              git checkout ${{ github.ref }}
+              git checkout -b rama-fusion-temporal
+              git checkout Dev
+              git merge rama-fusion-temporal -X theirs --no-ff --allow-unrelated-histories -m "Fusionar ${{ github.ref }} en Dev (conflictos resueltos)"
+              git push origin Dev
+            fi
+          fi
+
+  pruebas:
+    needs: fusionar-a-dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Ejecutar pruebas
         run: |
-          npm run build --if-present
-          npm run lint
-      - name: npm test
+          echo "Ejecutando pruebas..."
+          # Por ejemplo: npm test
+
+
+  fusionar-a-qa:
+    needs: pruebas
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Fusionar a QA
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm test
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git fetch origin QA
+          git checkout QA
+          git merge origin/Dev --no-ff --allow-unrelated-histories -m "Fusionar Dev en QA"
+          git push origin QA

@@ -47,6 +47,7 @@ jobs:
           echo "Ejecutando pruebas..."
           # Por ejemplo: npm test
 
+
   fusionar-a-qa:
     needs: pruebas
     runs-on: ubuntu-latest

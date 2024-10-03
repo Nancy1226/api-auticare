@@ -17,7 +17,8 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git checkout Dev
+          git fetch origin
+          git checkout -b Dev origin/Dev || git checkout -b Dev
           git merge ${{ github.ref }} --no-ff -m "Merge ${{ github.ref }} into Dev"
           git push origin Dev
 

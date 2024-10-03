@@ -4,6 +4,10 @@ import { authMiddleware } from "../../../autentificacion/infrastructure/middlewa
 
 const especialistaRouter = express.Router();
 
+// Ruta para enviar el código de verificación al número de teléfono ingresado
+especialistaRouter.post('/register/send-code', (req, res, next) => especialistaController.sendVerification(req, res, next));
+especialistaRouter.post('/register/verify-code', (req, res, next) => especialistaController.verifyCode(req, res, next));
+
 especialistaRouter.post("/", especialistaController.create.bind(especialistaController)); 
 
 // Rutas protegidas

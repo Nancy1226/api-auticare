@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import bodyParser from "body-parser";
 import express from "express";
+
 dotenv.config();
 
 import { config } from "./config";

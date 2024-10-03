@@ -1,0 +1,50 @@
+
+name: Branch Management
+
+on:
+  push:
+    branches:
+      - 'feature-002/add-integration-whatsapp'
+jobs:
+  merge-to-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      
+      - name: Merge to Dev
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git checkout Dev
+          git merge ${{ github.ref }} --no-ff -m "Merge ${{ github.ref }} into Dev"
+          git push origin Dev
+
+  test:
+    needs: merge-to-dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: |
+          # Aquí deberías poner tus comandos para ejecutar las pruebas
+          echo "Ejecutando pruebas..."
+          # Por ejemplo: npm test
+
+  merge-to-qa:
+    needs: test
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      
+      - name: Merge to QA
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git checkout QA
+          git merge Dev --no-ff -m "Merge Dev into QA"
+          git push origin QA

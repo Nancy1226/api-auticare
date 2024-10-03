@@ -1,4 +1,4 @@
-name: Branch Management
+name: Gestión de Ramas
 
 on:
   push:
@@ -6,14 +6,15 @@ on:
       - 'feature-002/add-integration-whatsapp'
 
 jobs:
-  merge-to-dev:
+  fusionar-a-dev:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
       
-      - name: Merge to Dev
+      - name: Fusionar a Dev
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
@@ -21,44 +22,47 @@ jobs:
           git checkout Dev
           
           if git merge-base --is-ancestor ${{ github.ref }} Dev; then
-            echo "Branch is already merged into Dev"
+            echo "La rama ya está fusionada en Dev"
           else
-            if git merge ${{ github.ref }} --no-ff --allow-unrelated-histories -m "Merge ${{ github.ref }} into Dev"; then
-              git push origin Dev
+            if git merge ${{ github.ref }} --no-ff --allow-unrelated-histories -m "Fusionar ${{ github.ref }} en Dev"; then
+              git push https://${{ secrets.PAT_TOKEN }}@github.com/Nancy1226/api-auticare.git HEAD:Dev
             else
               git merge --abort
               git checkout ${{ github.ref }}
-              git checkout -b temp-merge-branch
+              git checkout -b rama-fusion-temporal
               git checkout Dev
-              git merge temp-merge-branch -X theirs --no-ff --allow-unrelated-histories -m "Merge ${{ github.ref }} into Dev (resolved conflicts)"
-              git push origin Dev
+              git merge rama-fusion-temporal -X theirs --no-ff --allow-unrelated-histories -m "Fusionar ${{ github.ref }} en Dev (conflictos resueltos)"
+              git push https://${{ secrets.PAT_TOKEN }}@github.com/Nancy1226/api-auticare.git HEAD:Dev
             fi
           fi
 
-  test:
-    needs: merge-to-dev
+  pruebas:
+    needs: fusionar-a-dev
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Run tests
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+      - name: Ejecutar pruebas
         run: |
           echo "Ejecutando pruebas..."
           # Por ejemplo: npm test
 
-  merge-to-qa:
-    needs: test
+  fusionar-a-qa:
+    needs: pruebas
     runs-on: ubuntu-latest
     if: success()
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
       
-      - name: Merge to QA
+      - name: Fusionar a QA
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git fetch origin QA
           git checkout QA
-          git merge origin/Dev --no-ff --allow-unrelated-histories -m "Merge Dev into QA"
-          git push origin QA
+          git merge origin/Dev --no-ff --allow-unrelated-histories -m "Fusionar Dev en QA"
+          git push https://${{ secrets.PAT_TOKEN }}@github.com/Nancy1226/api-auticare.git HEAD:QA

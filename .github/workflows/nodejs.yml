@@ -30,7 +30,7 @@ jobs:
               git checkout ${{ github.ref }}
               git checkout -b temp-merge-branch
               git checkout Dev
-              git merge temp-merge-branch -X theirs --no-ff -m "Merge ${{ github.ref }} into Dev (resolved conflicts)"
+              git merge temp-merge-branch -X theirs --no-ff --allow-unrelated-histories -m "Merge ${{ github.ref }} into Dev (resolved conflicts)"
               git push origin Dev
             fi
           fi
@@ -42,7 +42,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run tests
         run: |
-          # Aquí deberías poner tus comandos para ejecutar las pruebas
           echo "Ejecutando pruebas..."
           # Por ejemplo: npm test
 
@@ -61,5 +60,5 @@ jobs:
           git config user.email github-actions@github.com
           git fetch origin QA
           git checkout QA
-          git merge origin/Dev --no-ff -m "Merge Dev into QA"
+          git merge origin/Dev --no-ff --allow-unrelated-histories -m "Merge Dev into QA"
           git push origin QA

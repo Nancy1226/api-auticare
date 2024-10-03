@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.tmp
+.idea
+.env
+coverage/
+src/publication/infrastructure/uploads/
+
+
+README

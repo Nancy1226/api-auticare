@@ -1,9 +1,13 @@
-import { JwtPayload } from 'jsonwebtoken';
+declare module 'mercadopago' {
+  export class MercadoPagoConfig {
+    constructor(options: { accessToken: string });
+  }
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: string | JwtPayload;
-    }
+  export class Preference {
+    constructor(client: MercadoPagoConfig);
+    create(data: { body: any }): Promise<{
+      id: string;
+      init_point: string;
+    }>;
   }
 }

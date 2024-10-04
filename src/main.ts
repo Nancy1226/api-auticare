@@ -9,7 +9,7 @@ import { config } from "./config";
 import { authRouter } from './autentificacion/infrastructure/routes/auth-router';
 import { tutorRouter } from './tutor/infrastructure/routes/tutor-router';
 import { especialistaRouter } from './especialista/infrastructure/routes/especialista-router';
-import { donacionRouter } from './donacion/infrastructure/routes/donacion-router';
+import { verificationRouter } from './verification/infrastructure/routes/verification-router';
 
 function boostrap() {
   const app = express();
@@ -18,7 +18,7 @@ function boostrap() {
   app.use("/api/v1/auth", authRouter);
   app.use("/api/v1/tutores", tutorRouter);
   app.use("/api/v1/especialistas", especialistaRouter);
-  app.use("/api/v1/donaciones", donacionRouter);
+  app.use("/api/v1/verificaciones", verificationRouter);
 
   const { port } = config.server;
 

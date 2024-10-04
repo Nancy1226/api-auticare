@@ -10,6 +10,7 @@ import { authRouter } from './autentificacion/infrastructure/routes/auth-router'
 import { tutorRouter } from './tutor/infrastructure/routes/tutor-router';
 import { especialistaRouter } from './especialista/infrastructure/routes/especialista-router';
 import { verificationRouter } from './verification/infrastructure/routes/verification-router';
+import { donacionRouter } from './donacion/infrastructure/routes/donacion-router';
 
 function boostrap() {
   const app = express();
@@ -19,6 +20,7 @@ function boostrap() {
   app.use("/api/v1/tutores", tutorRouter);
   app.use("/api/v1/especialistas", especialistaRouter);
   app.use("/api/v1/verificaciones", verificationRouter);
+  app.use("/api/v1/donaciones", donacionRouter);
 
   const { port } = config.server;
 

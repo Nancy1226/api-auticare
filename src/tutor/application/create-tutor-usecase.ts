@@ -1,14 +1,12 @@
-import { TutorRepository } from '../domain/tutor-repository';
-import { Tutor } from '../domain/tutor';
+import { Tutor } from "../domain/tutor";
+import { TutorRepository } from "../domain/tutor-repository";
 
 class CreateTutorUseCase {
   constructor(private tutorRepository: TutorRepository) {}
 
-  async execute(tutorPayload: Omit<Tutor, 'id'>): Promise<Tutor> {
-
+  async execute(tutorPayload: Omit<Tutor, "id" & "uuid">): Promise<Tutor> {
     const tutor = new Tutor(
       null,
-      tutorPayload.uuid, // Usamos el UUID generado
       tutorPayload.nombre,
       tutorPayload.apellido_paterno,
       tutorPayload.apellido_materno,

@@ -1,18 +1,18 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt, { Secret, JwtPayload } from 'jsonwebtoken';
+import { NextFunction, Request, Response } from "express";
+import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 
 const secretKey = process.env.JWT_SECRET || "supersecretkey";
 export const SECRET_KEY: Secret = secretKey;
 
 export interface CustomRequest extends Request {
-    user: string | JwtPayload;
+  user: string | JwtPayload;
 }
 
 export const authMiddleware = () => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers['authorization'];
+    const token = req.headers["authorization"];
     if (!token) {
-      return res.status(401).json({ message: 'Token no encontrado' });
+      return res.status(401).json({ message: "Token no encontrado" });
     }
 
     try {
@@ -20,7 +20,7 @@ export const authMiddleware = () => {
       (req as CustomRequest).user = decoded;
       next();
     } catch (error) {
-      return res.status(401).json({ message: 'Invalid token' });
+      return res.status(401).json({ message: "Invalid token" });
     }
   };
 };

@@ -11,8 +11,7 @@ export class GetTutorByID {
     }
     // En el caso de que exista imprimira el email de este
     console.log(tutor);
-    
+
     return this.tutorRepository.getTutorById(tutorId);
   }
-  
 }

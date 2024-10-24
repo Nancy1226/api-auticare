@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
-import { v4 as uuidv4 } from 'uuid';
-import SaveDonacionUseCase from '../../application/save-donacion-usecase';
-import CreateDonacionUseCase from '../../application/create-donation-usecase';
-import GetDonacionListUseCase from '../../application/get-donacionList-usecase';
+import { NextFunction, Request, Response } from "express";
+
+import CreateDonacionUseCase from "../../application/create-donation-usecase";
+import GetDonacionListUseCase from "../../application/get-donacionList-usecase";
+import SaveDonacionUseCase from "../../application/save-donacion-usecase";
 
 class DonacionController {
   constructor(
@@ -24,15 +24,13 @@ class DonacionController {
   async save(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { payment_id, status, amount } = req.query;
-      const uuid = uuidv4();
       console.log("Llegando en query: " + req.query);
 
       const dataPago = {
-        uuid: uuid,
         id_pago: payment_id as string,
         cantidad: parseFloat(amount as string),
-        moneda: 'MXN',
-        estado_pago: status as string
+        moneda: "MXN",
+        estado_pago: status as string,
       };
 
       const donacion = await this.saveDonacionUseCase.execute(dataPago);
@@ -50,7 +48,6 @@ class DonacionController {
       next(error);
     }
   }
-  
 }
 
 export default DonacionController;

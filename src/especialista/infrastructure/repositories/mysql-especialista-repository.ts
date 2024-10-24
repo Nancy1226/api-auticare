@@ -1,9 +1,8 @@
-import { query } from "../databases/mysql";
+import { query } from "../../../databases/mysql";
 import { Especialista } from "../../domain/especialista";
 import { EspecialistaRepository } from "../../domain/especialista-repository";
 
 export class MySQLEspecialistaRepository implements EspecialistaRepository {
-
   // Listar todos los especialistas
   async getAll(): Promise<Especialista[]> {
     const sql = `
@@ -11,24 +10,27 @@ export class MySQLEspecialistaRepository implements EspecialistaRepository {
       FROM Usuarios u
       JOIN Especialistas e ON u.id_usuario = e.id_especialista
     `;
-    const rows = await query(sql, []) as any[];
+    const rows = (await query(sql, [])) as any[];
 
-    return rows.map((row: any) => new Especialista(
-      row.id_usuario,
-      row.uuid,
-      row.nombre,
-      row.apellido_paterno,
-      row.apellido_materno,
-      row.sexo,
-      row.correo_electronico,
-      row.contrasena,
-      row.numero_telefono,
-      row.fecha_nacimiento,
-      row.tipo_usuario,
-      row.titulo_especialidad,
-      row.cedula_profesional,
-      row.cedula_validada
-    ));
+    return rows.map(
+      (row: any) =>
+        new Especialista(
+          row.id_usuario,
+          row.nombre,
+          row.apellido_paterno,
+          row.apellido_materno,
+          row.sexo,
+          row.correo_electronico,
+          row.contrasena,
+          row.numero_telefono,
+          row.fecha_nacimiento,
+          row.tipo_usuario,
+          row.titulo_especialidad,
+          row.cedula_profesional,
+          row.cedula_validada,
+          row.uuid
+        )
+    );
   }
 
   // Crear un nuevo especialista
@@ -39,9 +41,15 @@ export class MySQLEspecialistaRepository implements EspecialistaRepository {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Especialista')
     `;
     const paramsUsuarios = [
-      especialista.uuid, especialista.nombre, especialista.apellido_paterno, especialista.apellido_materno, 
-      especialista.sexo, especialista.correo, especialista.contrasena, 
-      especialista.telefono, especialista.fecha_nacimiento
+      especialista.uuid,
+      especialista.nombre,
+      especialista.apellido_paterno,
+      especialista.apellido_materno,
+      especialista.sexo,
+      especialista.correo,
+      especialista.contrasena,
+      especialista.telefono,
+      especialista.fecha_nacimiento,
     ];
     const result: any = await query(sqlUsuarios, paramsUsuarios);
 
@@ -53,27 +61,15 @@ export class MySQLEspecialistaRepository implements EspecialistaRepository {
       VALUES (?, ?, ?, ?)
     `;
     const paramsEspecialistas = [
-      especialistaId, especialista.titulo_especialidad, 
-      especialista.cedula_profesional, especialista.cedula_validada
-    ];
-    await query(sqlEspecialistas, paramsEspecialistas);
-
-    return new Especialista(
       especialistaId,
-      especialista.uuid,
-      especialista.nombre,
-      especialista.apellido_paterno,
-      especialista.apellido_materno,
-      especialista.sexo,
-      especialista.correo,
-      especialista.contrasena,
-      especialista.telefono,
-      especialista.fecha_nacimiento,
-      'Especialista',
       especialista.titulo_especialidad,
       especialista.cedula_profesional,
-      especialista.cedula_validada
-    );
+      especialista.cedula_validada,
+    ];
+
+    await query(sqlEspecialistas, paramsEspecialistas);
+
+    return especialista;
   }
 
   // Obtener un especialista por su ID
@@ -85,7 +81,7 @@ export class MySQLEspecialistaRepository implements EspecialistaRepository {
       WHERE u.uuid = ?
     `;
     const params = [id];
-    const rows = await query(sql, params) as any[];
+    const rows = (await query(sql, params)) as any[];
 
     if (rows.length === 0) {
       return null;
@@ -94,7 +90,6 @@ export class MySQLEspecialistaRepository implements EspecialistaRepository {
     const row = rows[0];
     return new Especialista(
       row.id_usuario,
-      row.uuid,
       row.nombre,
       row.apellido_paterno,
       row.apellido_materno,
@@ -106,12 +101,16 @@ export class MySQLEspecialistaRepository implements EspecialistaRepository {
       row.tipo_usuario,
       row.titulo_especialidad,
       row.cedula_profesional,
-      row.cedula_validada
+      row.cedula_validada,
+      row.uuid
     );
   }
 
   // Actualizar un especialista
-  async updateEspecialista(id: string, newEspecialista: Partial<Especialista>): Promise<Especialista | null> {
+  async updateEspecialista(
+    id: string,
+    newEspecialista: Partial<Especialista>
+  ): Promise<Especialista | null> {
     // Actualizar tabla Usuarios
     const sqlUsuarios = `
       UPDATE Usuarios 
@@ -119,24 +118,33 @@ export class MySQLEspecialistaRepository implements EspecialistaRepository {
       WHERE uuid = ?
     `;
     const paramsUsuarios = [
-      newEspecialista.nombre, newEspecialista.apellido_paterno, newEspecialista.apellido_materno,
-      newEspecialista.sexo, newEspecialista.correo, newEspecialista.telefono, 
-      newEspecialista.fecha_nacimiento, id
+      newEspecialista.nombre,
+      newEspecialista.apellido_paterno,
+      newEspecialista.apellido_materno,
+      newEspecialista.sexo,
+      newEspecialista.correo,
+      newEspecialista.telefono,
+      newEspecialista.fecha_nacimiento,
+      id,
     ];
     await query(sqlUsuarios, paramsUsuarios);
 
     // Actualizar tabla Especialistas
-    if (newEspecialista.titulo_especialidad || newEspecialista.cedula_profesional !== undefined || newEspecialista.cedula_validada !== undefined) {
+    if (
+      newEspecialista.titulo_especialidad ||
+      newEspecialista.cedula_profesional !== undefined ||
+      newEspecialista.cedula_validada !== undefined
+    ) {
       const sqlEspecialistas = `
         UPDATE Especialistas 
         SET titulo_especialidad=?, cedula_profesional=?, cedula_validada=? 
         WHERE id_especialista = (SELECT id_usuario FROM Usuarios WHERE uuid = ?)
       `;
       const paramsEspecialistas = [
-        newEspecialista.titulo_especialidad, 
-        newEspecialista.cedula_profesional, 
-        newEspecialista.cedula_validada, 
-        id
+        newEspecialista.titulo_especialidad,
+        newEspecialista.cedula_profesional,
+        newEspecialista.cedula_validada,
+        id,
       ];
       await query(sqlEspecialistas, paramsEspecialistas);
     }
@@ -159,37 +167,4 @@ export class MySQLEspecialistaRepository implements EspecialistaRepository {
 
     return result.affectedRows > 0;
   }
-
-  /* // Encontrar un especialista por correo electrónico
-  async findByEmail(correo: string): Promise<Especialista | null> {
-    const sql = `
-      SELECT u.*, e.titulo_especialidad, e.cedula_profesional, e.cedula_validada
-      FROM Usuarios u
-      JOIN Especialistas e ON u.id_usuario = e.id_especialista
-      WHERE u.correo_electronico = ?
-    `;
-    const params = [correo];
-    const rows = await query(sql, params) as any[];
-
-    if (rows.length === 0) {
-      return null;
-    }
-
-    const row = rows[0];
-    return new Especialista(
-      row.id_usuario,
-      row.nombre,
-      row.apellido_paterno,
-      row.apellido_materno,
-      row.sexo,
-      row.correo_electronico,
-      row.contrasena,
-      row.numero_telefono,
-      row.fecha_nacimiento,
-      row.tipo_usuario,
-      row.titulo_especialidad,
-      row.cedula_profesional,
-      row.cedula_validada
-    );
-  } */
 }

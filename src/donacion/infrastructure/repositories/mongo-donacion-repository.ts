@@ -9,31 +9,33 @@ export class MongoDonacionRepository implements DonacionRepository {
       id_pago: donacion.id_pago,
       cantidad: donacion.cantidad,
       moneda: donacion.moneda,
-      estado_pago: donacion.estado_pago
+      estado_pago: donacion.estado_pago,
     });
 
     const savedDonacion = await newDonacion.save();
     return new Donacion(
       savedDonacion.id,
-      savedDonacion.uuid,
       savedDonacion.id_pago,
       savedDonacion.cantidad,
       savedDonacion.moneda,
-      savedDonacion.estado_pago
+      savedDonacion.estado_pago,
+      donacion.uuid
     );
   }
 
   async getAll(): Promise<Donacion[]> {
     const donaciones = await DonacionModel.find();
-    
-    return donaciones.map(donacion => new Donacion(
-      donacion.id,
-      donacion.uuid,
-      donacion.id_pago,
-      donacion.cantidad,
-      donacion.moneda,
-      donacion.estado_pago
-    ));
-  }
 
+    return donaciones.map(
+      (donacion) =>
+        new Donacion(
+          donacion.id,
+          donacion.id_pago,
+          donacion.cantidad,
+          donacion.moneda,
+          donacion.estado_pago,
+          donacion.uuid
+        )
+    );
+  }
 }

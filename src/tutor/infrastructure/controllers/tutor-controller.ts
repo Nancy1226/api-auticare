@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
-import { v4 as uuidv4 } from 'uuid';
-import bcrypt from 'bcrypt';
-import CreateTutorUseCase from '../../application/create-tutor-usecase';
-import GetTutorListUseCase from '../../application/get-tutorlist-usecase';
-import { GetTutorByID } from '../../application/get-tutorById-usecase';
-import UpdateTutorUseCase from '../../application/update-tutor-usecase';
-import DeleteTutorUseCase from '../../application/delete-tutor-usecase';
+import bcrypt from "bcrypt";
+import { NextFunction, Request, Response } from "express";
+
+import CreateTutorUseCase from "../../application/create-tutor-usecase";
+import DeleteTutorUseCase from "../../application/delete-tutor-usecase";
+import { GetTutorByID } from "../../application/get-tutorById-usecase";
+import GetTutorListUseCase from "../../application/get-tutorlist-usecase";
+import UpdateTutorUseCase from "../../application/update-tutor-usecase";
 
 class TutorController {
   constructor(
@@ -14,18 +14,16 @@ class TutorController {
     private getTutorByID: GetTutorByID,
     private updateTutorUseCase: UpdateTutorUseCase,
     private deleteTutorUseCase: DeleteTutorUseCase
-  ) { }
+  ) {}
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       let userPayload = req.body; // Se obtiene el payload
-      const uuid = uuidv4(); // Generar el UUID
       const hashedPassword = await bcrypt.hash(userPayload.contrasena, 10); // Cifrar la contraseña
 
       // Reemplazar la contraseña cifrada y agregar el UUID en el payload
       userPayload = {
         ...userPayload,
-        uuid: uuid,
         contrasena: hashedPassword,
       };
 
@@ -45,7 +43,11 @@ class TutorController {
     }
   }
 
-  async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const user = await this.getTutorByID.run(req.params.id);
       res.json(user);
@@ -58,7 +60,10 @@ class TutorController {
     try {
       const userId = req.params.id;
       const userPayload = req.body;
-      const updatedUser = await this.updateTutorUseCase.execute(userId, userPayload);
+      const updatedUser = await this.updateTutorUseCase.execute(
+        userId,
+        userPayload
+      );
       res.json(updatedUser);
     } catch (error) {
       next(error);
@@ -74,7 +79,6 @@ class TutorController {
       next(error);
     }
   }
-
 }
 
 export default TutorController;

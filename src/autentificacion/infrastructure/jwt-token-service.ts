@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+
 import { TokenService } from "../domain/token-service";
 
 export class JWTTokenService implements TokenService {

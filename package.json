@@ -65,6 +65,7 @@
     ]
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "aws-sdk": "^2.1649.0",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",

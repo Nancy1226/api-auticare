@@ -1,4 +1,4 @@
-import { TutorRepository } from '../domain/tutor-repository';
+import { TutorRepository } from "../domain/tutor-repository";
 
 class DeleteTutorUseCase {
   constructor(private tutorRepository: TutorRepository) {}

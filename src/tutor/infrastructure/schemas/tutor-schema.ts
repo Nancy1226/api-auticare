@@ -1,5 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import { Tutor } from '../../domain/tutor';
+import mongoose, { Document, Schema } from "mongoose";
+
+import { Tutor } from "../../domain/tutor";
 
 export interface TutorDocument extends Tutor, Document {
   id: number | null;
@@ -13,7 +14,7 @@ export interface TutorDocument extends Tutor, Document {
   telefono: string;
   fecha_nacimiento: string;
   tipo_usuario: string;
-  cargo: string; /* Si es tipo TUTOR */
+  cargo: string /* Si es tipo TUTOR */;
 }
 
 const TutorSchema: Schema = new Schema({
@@ -26,8 +27,8 @@ const TutorSchema: Schema = new Schema({
   contrasena: { type: String, required: true },
   telefono: { type: String, required: true },
   fecha_nacimiento: { type: String, required: true },
-  tipo_usuario: { type: String, default: 'Tutor' },
-  cargo: { type: String, required: true }
+  tipo_usuario: { type: String, default: "Tutor" },
+  cargo: { type: String, required: true },
 });
 
-export const TutorModel = mongoose.model<TutorDocument>('tutores', TutorSchema);
+export const TutorModel = mongoose.model<TutorDocument>("tutores", TutorSchema);

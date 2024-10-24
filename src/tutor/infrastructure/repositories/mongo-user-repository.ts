@@ -3,25 +3,26 @@ import { TutorRepository } from "../../domain/tutor-repository";
 import { TutorModel } from "../schemas/tutor-schema"; // Esquema de Mongoose
 
 export class MongoTutorRepository implements TutorRepository {
-
-  // Listar todos los tutores
   async getAll(): Promise<Tutor[]> {
     const tutors = await TutorModel.find();
-    
-    return tutors.map(tutor => new Tutor(
-      tutor.id,
-      tutor.uuid,
-      tutor.nombre,
-      tutor.apellido_paterno,
-      tutor.apellido_materno,
-      tutor.sexo,
-      tutor.correo,
-      tutor.contrasena,
-      tutor.telefono,
-      tutor.fecha_nacimiento,
-      'Tutor', // Tipo de usuario por defecto
-      tutor.cargo
-    ));
+
+    return tutors.map(
+      (tutor) =>
+        new Tutor(
+          tutor.id,
+          tutor.nombre,
+          tutor.apellido_paterno,
+          tutor.apellido_materno,
+          tutor.sexo,
+          tutor.correo,
+          tutor.contrasena,
+          tutor.telefono,
+          tutor.fecha_nacimiento,
+          tutor.tipo_usuario, // Tipo de usuario por defecto
+          tutor.cargo,
+          tutor.uuid
+        )
+    );
   }
 
   // Crear un nuevo tutor
@@ -37,13 +38,12 @@ export class MongoTutorRepository implements TutorRepository {
       telefono: tutor.telefono,
       fecha_nacimiento: tutor.fecha_nacimiento,
       cargo: tutor.cargo,
-      tipo_usuario: 'Tutor' // Tipo de usuario definido como Tutor
+      tipo_usuario: "Tutor", // Tipo de usuario definido como Tutor
     });
 
     const savedTutor = await newTutor.save();
     return new Tutor(
       savedTutor.id,
-      savedTutor.uuid,
       savedTutor.nombre,
       savedTutor.apellido_paterno,
       savedTutor.apellido_materno,
@@ -52,8 +52,9 @@ export class MongoTutorRepository implements TutorRepository {
       savedTutor.contrasena,
       savedTutor.telefono,
       savedTutor.fecha_nacimiento,
-      'Tutor', 
-      savedTutor.cargo
+      "Tutor",
+      savedTutor.cargo,
+      tutor.uuid
     );
   }
 
@@ -67,7 +68,6 @@ export class MongoTutorRepository implements TutorRepository {
 
     return new Tutor(
       tutor.id,
-      tutor.uuid,
       tutor.nombre,
       tutor.apellido_paterno,
       tutor.apellido_materno,
@@ -77,13 +77,19 @@ export class MongoTutorRepository implements TutorRepository {
       tutor.telefono,
       tutor.fecha_nacimiento,
       tutor.tipo_usuario,
-      tutor.cargo
+      tutor.cargo,
+      tutor.uuid
     );
   }
 
   // Actualizar un tutor
-  async updateTutor(id: string, newTutor: Partial<Tutor>): Promise<Tutor | null> {
-    const updatedTutor = await TutorModel.findByIdAndUpdate(id, newTutor, { new: true });
+  async updateTutor(
+    id: string,
+    newTutor: Partial<Tutor>
+  ): Promise<Tutor | null> {
+    const updatedTutor = await TutorModel.findByIdAndUpdate(id, newTutor, {
+      new: true,
+    });
 
     if (!updatedTutor) {
       return null;
@@ -91,7 +97,6 @@ export class MongoTutorRepository implements TutorRepository {
 
     return new Tutor(
       updatedTutor.id,
-      updatedTutor.uuid,
       updatedTutor.nombre,
       updatedTutor.apellido_paterno,
       updatedTutor.apellido_materno,
@@ -101,7 +106,8 @@ export class MongoTutorRepository implements TutorRepository {
       updatedTutor.telefono,
       updatedTutor.fecha_nacimiento,
       updatedTutor.tipo_usuario,
-      updatedTutor.cargo
+      updatedTutor.cargo,
+      updatedTutor.uuid
     );
   }
 
@@ -110,27 +116,4 @@ export class MongoTutorRepository implements TutorRepository {
     const result = await TutorModel.findByIdAndDelete(id);
     return result !== null;
   }
-
-  // Encontrar un tutor por correo electrónico
-  // async findByEmail(correo: string): Promise<Tutor | null> {
-  //   const tutor = await TutorModel.findOne({ correo_electronico: correo });
-
-  //   if (!tutor) {
-  //     return null;
-  //   }
-
-  //   return new Tutor(
-  //     tutor.id,
-  //     tutor.nombre,
-  //     tutor.apellido_paterno,
-  //     tutor.apellido_materno,
-  //     tutor.sexo,
-  //     tutor.correo,
-  //     tutor.contrasena,
-  //     tutor.telefono,
-  //     tutor.fecha_nacimiento,
-  //     tutor.tipo_usuario,
-  //     tutor.cargo
-  //   );
-  // }
 }

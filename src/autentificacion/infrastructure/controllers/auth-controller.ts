@@ -1,6 +1,7 @@
-import { Request, Response } from 'express';
-import { LoginUseCase } from '../../application/login-usecase';
-import { LogoutUseCase } from '../../application/logout-usecase';
+import { Request, Response } from "express";
+
+import { LoginUseCase } from "../../application/login-usecase";
+import { LogoutUseCase } from "../../application/logout-usecase";
 
 export class AuthController {
   constructor(
@@ -22,8 +23,6 @@ export class AuthController {
     await this.logoutUseCase.execute();
     return res.status(200).json({ message: "Logged out successfully" });
   }
-
-
 
   // async logout(req: Request, res: Response): Promise<Response> {
   //   const token = req.headers['authorization']?.split(' ')[1]; // Obtener el token del encabezado Authorization

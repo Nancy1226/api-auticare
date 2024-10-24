@@ -1,5 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import { Especialista } from '../../domain/especialista';
+import mongoose, { Document, Schema } from "mongoose";
+
+import { Especialista } from "../../domain/especialista";
 
 export interface EspecialistaDocument extends Especialista, Document {
   id: number | null;
@@ -13,7 +14,7 @@ export interface EspecialistaDocument extends Especialista, Document {
   fecha_nacimiento: string;
   tipo_usuario: string;
   titulo_especialidad: string;
-  cedula_profesional: string; 
+  cedula_profesional: string;
   cedula_validada: boolean;
 }
 
@@ -26,10 +27,13 @@ const EspecialistaSchema: Schema = new Schema({
   contrasena: { type: String, required: true },
   telefono: { type: String, required: true },
   fecha_nacimiento: { type: String, required: true },
-  tipo_usuario: { type: String, default: 'Especialista' },
+  tipo_usuario: { type: String, default: "Especialista" },
   titulo_especialidad: { type: String, required: true },
   cedula_profesional: { type: String, required: true },
-  cedula_validada: { type: Boolean, required: true }
+  cedula_validada: { type: Boolean, required: true },
 });
 
-export const EspecialistaModel = mongoose.model<EspecialistaDocument>('especialistas', EspecialistaSchema);
+export const EspecialistaModel = mongoose.model<EspecialistaDocument>(
+  "especialistas",
+  EspecialistaSchema
+);

@@ -1,9 +1,9 @@
 export interface MercadoPagoService {
-    createPayment(amount: number, description: string): Promise<PaymentResult>;
+  createPayment(amount: number, description: string): Promise<PaymentResult>;
 }
 
 export interface PaymentResult {
-    // status: 'Exitoso' | 'Pendiente' | 'Fallido';
-    id: string | undefined;
-    init_point: string | undefined;
-  }
+  // status: 'Exitoso' | 'Pendiente' | 'Fallido';
+  id: string | undefined;
+  init_point: string | undefined;
+}

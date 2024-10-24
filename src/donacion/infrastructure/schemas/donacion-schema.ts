@@ -1,5 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import { Donacion } from '../../domain/donacion';
+import mongoose, { Document, Schema } from "mongoose";
+
+import { Donacion } from "../../domain/donacion";
 
 export interface DonacionDocument extends Donacion, Document {
   id: number | null;
@@ -15,7 +16,10 @@ const donacionSchema: Schema = new Schema({
   id_pago: { type: String, required: true },
   cantidad: { type: Number, required: true },
   moneda: { type: String, required: true },
-  estado_pago: { type: String, required: true }
+  estado_pago: { type: String, required: true },
 });
 
-export const DonacionModel = mongoose.model<DonacionDocument>('donaciones', donacionSchema);
+export const DonacionModel = mongoose.model<DonacionDocument>(
+  "donaciones",
+  donacionSchema
+);

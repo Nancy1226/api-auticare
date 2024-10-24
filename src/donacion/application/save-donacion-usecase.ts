@@ -1,14 +1,14 @@
-import { DonacionRepository } from '../domain/donacion-repository';
-import { Donacion } from '../domain/donacion';
+import { Donacion } from "../domain/donacion";
+import { DonacionRepository } from "../domain/donacion-repository";
 
 class SaveDonacionUseCase {
   constructor(private tutorRepository: DonacionRepository) {}
 
-  async execute(donacionPayload: Omit<Donacion, 'id'>): Promise<Donacion> {
-
+  async execute(
+    donacionPayload: Omit<Donacion, "id" | "uuid">
+  ): Promise<Donacion> {
     const donacion = new Donacion(
-      null,
-      donacionPayload.uuid, // Usamos el UUID generado
+      null, // Usamos el UUID generado
       donacionPayload.id_pago,
       donacionPayload.cantidad,
       donacionPayload.moneda,

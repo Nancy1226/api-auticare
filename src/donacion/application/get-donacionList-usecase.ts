@@ -1,5 +1,5 @@
-import { Donacion } from '../domain/donacion';
-import { DonacionRepository } from '../domain/donacion-repository';
+import { Donacion } from "../domain/donacion";
+import { DonacionRepository } from "../domain/donacion-repository";
 
 class GetDonacionListUseCase {
   constructor(private donacionRepository: DonacionRepository) {}

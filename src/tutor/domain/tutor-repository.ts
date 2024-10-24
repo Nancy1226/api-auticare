@@ -9,10 +9,10 @@ export interface TutorRepository {
 
   // Metodo para obtener un usuario por ID
   getTutorById(tutorId: string): Promise<Tutor | null>;
-  
+
   // Metodo para actualizar un usuario por ID
   updateTutor(tutorId: string, tutor: Partial<Tutor>): Promise<Tutor | null>;
-  
+
   // Metodo para eliminar un usuario por ID
   deleteTutor(tutorId: string): Promise<boolean>;
 }

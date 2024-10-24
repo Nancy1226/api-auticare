@@ -1,24 +1,25 @@
-import { EspecialistaRepository } from '../domain/especialista-repository';
-import { Especialista } from '../domain/especialista';
+import { Especialista } from "../domain/especialista";
+import { EspecialistaRepository } from "../domain/especialista-repository";
 
 class CreateEspecialistaUseCase {
   constructor(private especialistaRepository: EspecialistaRepository) {}
 
-  async execute(especialistaPayload: Omit<Especialista, 'id'>): Promise<Especialista> {
+  async execute(
+    especialistaPayload: Omit<Especialista, "id" | "uuid">
+  ): Promise<Especialista> {
     const tutor = new Especialista(
-      null, 
-      especialistaPayload.uuid,
+      null,
       especialistaPayload.nombre,
       especialistaPayload.apellido_paterno,
-      especialistaPayload.apellido_materno, 
+      especialistaPayload.apellido_materno,
       especialistaPayload.sexo,
-      especialistaPayload.correo, 
+      especialistaPayload.correo,
       especialistaPayload.contrasena,
-      especialistaPayload.telefono, 
+      especialistaPayload.telefono,
       especialistaPayload.fecha_nacimiento,
-      especialistaPayload.tipo_usuario, 
-      especialistaPayload.titulo_especialidad, 
-      especialistaPayload.cedula_profesional, 
+      especialistaPayload.tipo_usuario,
+      especialistaPayload.titulo_especialidad,
+      especialistaPayload.cedula_profesional,
       especialistaPayload.cedula_validada
     );
 
